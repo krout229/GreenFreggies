@@ -12,10 +12,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenFreggies.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using GreenFreggies.API.Repository;
+using GreenFreggies.API.Services;
 
 namespace GreenFreggies.API
 {
@@ -32,23 +33,35 @@ namespace GreenFreggies.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<VegetablesDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlConnection")));
+            //User
+            services.AddTransient<IUserDetails, UserDetails>();
+            services.AddTransient<UserDetailsServices, UserDetailsServices>();
+            //Cart
+            services.AddTransient<ICartRepository, CartRepository>();
+            services.AddTransient<CartServices, CartServices>();
+            //Order
+            services.AddTransient<IOrderDetails, OrderDetailsRepository>();
+            services.AddTransient<orderDetailsServices, orderDetailsServices>();
+            //Vegetable
+            services.AddTransient<IVegetable, Vegetable>();
+            services.AddTransient<VegetableServices, VegetableServices>();
+            //Transaction
+            services.AddTransient<ITransaction, TransactionRepository>();
+            services.AddTransient<TransactionRepository, TransactionRepository>();
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
-            /*services.AddControllersWithViews().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore).AddNewtonsoftJson(
-                options => options.SerializerSettings.ContractResolver = new ContractResolver());*/
+            services.AddControllersWithViews().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore).AddNewtonsoftJson(
+                options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GreenFreggies.API", Version = "v1" });
             });
+
         }
 
-        private object Resolver()
-        {
-            throw new NotImplementedException();
-        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -63,7 +76,8 @@ namespace GreenFreggies.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

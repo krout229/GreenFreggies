@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace GreenFreggies.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class UserDetailsController : Controller
     {
         private UserDetailsServices _userDetailsServices;
