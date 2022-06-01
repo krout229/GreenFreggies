@@ -13,7 +13,7 @@ namespace GreenFreggies.API.Repository
         private VegetablesDbContext _vegetablesDb;
         public UserDetails(VegetablesDbContext vegetablesDb)
         {
-            _vegetablesDb = vegetablesDb;//Doubt
+            _vegetablesDb = vegetablesDb;
         }
 
         public string DeleteUserDetails(int UserId)
