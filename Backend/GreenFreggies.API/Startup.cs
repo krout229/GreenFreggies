@@ -45,13 +45,14 @@ namespace GreenFreggies.API
             //Vegetable
             services.AddTransient<IVegetable, Vegetable>();
             services.AddTransient<VegetableServices, VegetableServices>();
+            //Feedback
+            services.AddTransient<IFeedback, FeedbackDetails>();
+            services.AddTransient<FeedbackService,FeedbackService>();
             //Transaction
             services.AddTransient<ITransaction, TransactionRepository>();
             services.AddTransient<TransactionRepository, TransactionRepository>();
-            services.AddCors(c =>
-            {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            });
+            services.AddCors();
+            
             services.AddControllersWithViews().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore).AddNewtonsoftJson(
                 options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
             services.AddControllers();
@@ -66,6 +67,7 @@ namespace GreenFreggies.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader());
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

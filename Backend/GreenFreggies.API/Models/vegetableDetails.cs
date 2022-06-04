@@ -15,7 +15,7 @@ namespace GreenFreggies.API.Models
         public int VegetableID { get; set; }
         public string VegetableName { get; set; }
         public int VegetablePrice { get; set; }
-        public string VegetableImage { get; set; }
+        public string VegetableImage { get; set; } 
 
 
     }

@@ -19,6 +19,7 @@ namespace GreenFreggies.API.Data
         public DbSet<Transaction> transactions { get; set; }
         public DbSet<cart> Carts { get; set; }
         public DbSet<OrderDetails> orderDetails { get; set; }
+        public DbSet<feedback> feedback { get; set; }
 
     }
 }
